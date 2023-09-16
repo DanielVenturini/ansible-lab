@@ -4,16 +4,21 @@ RUN ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
 RUN ssh-keygen -t ecdsa -b 384 -f /etc/ssh/ssh_host_ecdsa_key -N ""
 RUN ssh-keygen -t ed25519 -b 4096 -f /etc/ssh/ssh_host_ed25519_key -N ""
 
-# add ssh keys to user ansible
-RUN useradd -m -u 1001 --user-group -G 0 ansible
-
-ADD ./authorized_keys /home/ansible/.ssh/
-ADD ./id_rsa* /home/ansible/.ssh/
-RUN chmod 400 /home/ansible/.ssh/* && chown ansible.ansible -R /home/ansible/.ssh/
-
 # install ansible
 RUN yum install epel-release -y
 RUN yum install ansible -y
+
+# add ssh keys to user ansible
+RUN useradd -m -u 1001 --user-group -G 0 ansible
+
+# creating entrypoint
+RUN tee /entrypoint.sh <<EOF
+#!/bin/sh
+/usr/sbin/sshd
+tail -f /dev/null    # the way to keep container running
+EOF
+
+RUN chmod +x /entrypoint.sh
 
 # update ansible configuration
 RUN tee -a /etc/ansible/hosts <<EOF
@@ -22,15 +27,13 @@ debian-ansible
 archlinux-ansible
 
 [lab:vars]
-ansible_user:ansible
+ansible_user=root
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 EOF
 
-RUN tee /entrypoint.sh <<EOF
-#!/bin/sh
-/usr/sbin/sshd
-tail -f /dev/null    # the way to keep container running
-EOF
-
-RUN chmod +x /entrypoint.sh
+# add authentication files
+ADD ./authorized_keys /home/ansible/.ssh/
+ADD ./id_rsa* /home/ansible/.ssh/
+RUN chmod 400 /home/ansible/.ssh/* && chown ansible.ansible -R /home/ansible/.ssh/
 
 ENTRYPOINT /entrypoint.sh

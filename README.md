@@ -5,6 +5,8 @@ This is an architecture composed by three containers (on a real scenary it could
 
 All containers have ssh enables in order to use Ansible and all containers can reach each other through ssh.
 
+Container `centos-ansible` is accessible through ssh port from the local network, but the `debian` and `archlinux` ones are not. The only way to access `debian` and `archlinux` through ssh is from `centos` because `debian` and `archlinux` are running on root (required to install applications through Ansible) and they do not expose port outside of the network, but `centos` is running on `ansible` user and exposes port `22002`.
+
 ## Configuration
 First, let's create the ssh keys used on containers and save under `ssh-credentials/` path and create the authorized key file as well:
 
@@ -31,9 +33,8 @@ docker compose up -d --build
 
 Now, whether you copied your public key into `authorized_keys`, you should be able to ssh into any container:
 ```bash
-ssh root@localhost -oPort=22002
+ssh ansible@localhost -oPort=22002
 
-# inside centos-ansible
-## should be able to ssh into other containers
+# inside centos-ansible, should be able to ssh into other containers
 ssh root@debian-ansible
 ```

@@ -1,0 +1,11 @@
+- name: Install and configure nginx
+  hosts: lab
+  # requre privilege escalation
+  # become: yes
+  tasks:
+    - name: Install nginx webserver
+      package:
+        name: nginx
+        state: present
+    - name: Start nginx webserver
+      command: nginx

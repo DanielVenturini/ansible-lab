@@ -3,14 +3,7 @@ RUN mkdir -p /run/sshd
 RUN apt update -y && apt install openssh-server python3 -y
 # debian ssh keys are already there
 
-# add ssh keys to user ansible
-RUN useradd -m -u 1001 --user-group -G 0 ansible
-
-# add ssh keys
-ADD ./authorized_keys /home/ansible/.ssh/
-ADD ./id_rsa* /home/ansible/.ssh/
-RUN chmod 400 /home/ansible/.ssh/* && chown ansible.ansible -R /home/ansible/.ssh/
-
+# creating entrypoint
 RUN tee /entrypoint.sh <<EOF
 #!/bin/sh
 /usr/sbin/sshd
@@ -18,5 +11,10 @@ tail -f /dev/null    # the way to keep container running
 EOF
 
 RUN chmod +x /entrypoint.sh
+
+# add ssh keys
+ADD ./authorized_keys /root/.ssh/
+ADD ./id_rsa* /root/.ssh/
+RUN chmod 400 /root/.ssh/* && chown 0.0 -R /root/.ssh/
 
 ENTRYPOINT /entrypoint.sh

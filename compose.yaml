@@ -6,11 +6,11 @@ services:
         dockerfile: ./centos-Dockerfile
     ports:
       - 22002:22
+      - 8280:80
     networks:
       - ansible-network
-    # volumes:
-    #   - centos-ansible:/home/ansible
-    # user: ansible
+    volumes:
+      - ./centos/playbooks/:/home/ansible/playbooks
     command: ["sh","-c","/entrypoint.sh"]
     restart: unless-stopped
     deploy:
@@ -25,12 +25,9 @@ services:
         context: ./debian/
         dockerfile: ./debian-Dockerfile
     ports:
-      - 22102:22
+      - 8281:80
     networks:
       - ansible-network
-    # volumes:
-    #   - debian-ansible:/home/ansible
-    # user: ansible
     command: ["sh","-c","/entrypoint.sh"]
     restart: unless-stopped
     deploy:
@@ -45,12 +42,9 @@ services:
         context: ./archlinux/
         dockerfile: ./archlinux-Dockerfile
     ports:
-      - 22202:22
+      - 8282:80
     networks:
       - ansible-network
-    # volumes:
-    #   - archlinux-ansible:/home/ansible
-    # user: ansible
     command: ["sh","-c","/entrypoint.sh"]
     restart: unless-stopped
     deploy:
@@ -65,9 +59,3 @@ networks:
     ipam:
       config:
         - subnet: 10.0.198.0/27
-
-# volumes:
-#   centos-ansible:
-#     external: false
-#   debian-ansible:
-#     external: false
