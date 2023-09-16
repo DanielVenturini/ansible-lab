@@ -1,0 +1,73 @@
+services:
+  centos-ansible:
+    hostname: centos-ansible
+    build:
+        context: ./centos/
+        dockerfile: ./centos-Dockerfile
+    ports:
+      - 22002:22
+    networks:
+      - ansible-network
+    # volumes:
+    #   - centos-ansible:/home/ansible
+    # user: ansible
+    command: ["sh","-c","/entrypoint.sh"]
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512m
+
+  debian-ansible:
+    hostname: debian-ansible
+    build:
+        context: ./debian/
+        dockerfile: ./debian-Dockerfile
+    ports:
+      - 22102:22
+    networks:
+      - ansible-network
+    # volumes:
+    #   - debian-ansible:/home/ansible
+    # user: ansible
+    command: ["sh","-c","/entrypoint.sh"]
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512m
+
+  archlinux-ansible:
+    hostname: archlinux-ansible
+    build:
+        context: ./archlinux/
+        dockerfile: ./archlinux-Dockerfile
+    ports:
+      - 22202:22
+    networks:
+      - ansible-network
+    # volumes:
+    #   - archlinux-ansible:/home/ansible
+    # user: ansible
+    command: ["sh","-c","/entrypoint.sh"]
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512m
+
+networks:
+  ansible-network:
+    external: false
+    ipam:
+      config:
+        - subnet: 10.0.198.0/27
+
+# volumes:
+#   centos-ansible:
+#     external: false
+#   debian-ansible:
+#     external: false
