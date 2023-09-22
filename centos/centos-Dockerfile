@@ -24,7 +24,7 @@ RUN chmod +x /entrypoint.sh
 RUN tee -a /etc/ansible/hosts <<EOF
 [lab]
 debian-ansible
-archlinux-ansible
+archlinux-ansible ansible_port=22022
 
 [lab:vars]
 ansible_user=root
