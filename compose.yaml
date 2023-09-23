@@ -6,12 +6,13 @@ services:
         dockerfile: ./centos-Dockerfile
     ports:
       - 22002:22
-      - 8280:80
+      - 8280:8080
     networks:
       - ansible-network
       - webapps-network
     volumes:
       - ./centos/playbooks/:/home/ansible/playbooks
+      - ./centos/nginx.conf:/etc/nginx/nginx.conf
     command: ["sh","-c","/entrypoint.sh"]
     restart: unless-stopped
     deploy:
@@ -54,7 +55,7 @@ networks:
   webapps-network:
     external: false
     attachable: false
-    internal: true
+    # internal: true
     ipam:
       config:
         - subnet: 10.0.198.32/27

@@ -4,9 +4,9 @@ RUN ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
 RUN ssh-keygen -t ecdsa -b 384 -f /etc/ssh/ssh_host_ecdsa_key -N ""
 RUN ssh-keygen -t ed25519 -b 4096 -f /etc/ssh/ssh_host_ed25519_key -N ""
 
-# install ansible
+# install ansible and nginx
 RUN yum install epel-release -y
-RUN yum install ansible -y
+RUN yum install ansible nginx -y
 
 # add ssh keys to user ansible
 RUN useradd -m -u 1001 --user-group -G 0 ansible
@@ -15,6 +15,7 @@ RUN useradd -m -u 1001 --user-group -G 0 ansible
 RUN tee /entrypoint.sh <<EOF
 #!/bin/sh
 /usr/sbin/sshd
+nginx
 tail -f /dev/null    # the way to keep container running
 EOF
 
@@ -30,6 +31,9 @@ archlinux-ansible ansible_port=22022
 ansible_user=root
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 EOF
+
+# remove python warning
+RUN sed --regex -i 's,\[defaults\]$,&\ninterpreter_python=auto_silent,g' /etc/ansible/ansible.cfg
 
 # add authentication files
 ADD ./authorized_keys /home/ansible/.ssh/
