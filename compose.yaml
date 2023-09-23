@@ -9,6 +9,7 @@ services:
       - 8280:80
     networks:
       - ansible-network
+      - webapps-network
     volumes:
       - ./centos/playbooks/:/home/ansible/playbooks
     command: ["sh","-c","/entrypoint.sh"]
@@ -24,10 +25,8 @@ services:
     build:
         context: ./debian/
         dockerfile: ./debian-Dockerfile
-    ports:
-      - 8281:80
     networks:
-      - ansible-network
+      - webapps-network
     command: ["sh","-c","/entrypoint.sh"]
     restart: unless-stopped
     deploy:
@@ -41,10 +40,8 @@ services:
     build:
         context: ./archlinux/
         dockerfile: ./archlinux-Dockerfile
-    ports:
-      - 8282:80
     networks:
-      - ansible-network
+      - webapps-network
     command: ["sh","-c","/entrypoint.sh"]
     restart: unless-stopped
     deploy:
@@ -54,6 +51,14 @@ services:
           memory: 512m
 
 networks:
+  webapps-network:
+    external: false
+    attachable: false
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.198.32/27
+
   ansible-network:
     external: false
     ipam:

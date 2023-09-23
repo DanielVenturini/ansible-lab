@@ -5,7 +5,7 @@ This is an architecture composed by three containers (on a real scenary it could
 
 All containers have ssh enabled in order to use Ansible and all containers can reach each other through ssh.
 
-Container `centos-ansible` is accessible through ssh port from the local network, but the `debian-ansible` and `archlinux-ansible` ones are not. The only way to access `debian` and `archlinux` through ssh is from inside of `centos-ansible` because `debian-ansible` and `archlinux-ansible` are running on root (required to install applications through Ansible) and I do not want to expose port outside of the network, but `centos-ansible` is running on `ansible` user and it is ok to expose port `22002`.
+Container `centos-ansible` is accessible through ssh port from the local network, but the `debian-ansible` and `archlinux-ansible` ones are not because they are on a isolated network. The only way to access `debian` and `archlinux` through ssh is from inside of `centos-ansible` because `debian-ansible` and `archlinux-ansible` are running on root (required to install applications through Ansible) and I do not want to expose port outside of the network, but `centos-ansible` is running on `ansible` user and it is ok to expose port `22002`.
 
 ## Configuration
 First, let's create the ssh keys used on containers and save under `ssh-credentials/` path and create the authorized key file as well:
