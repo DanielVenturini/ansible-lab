@@ -23,21 +23,28 @@ RUN chmod +x /entrypoint.sh
 
 # update ansible configuration
 RUN tee -a /etc/ansible/hosts <<EOF
+localhost ansible_user=root
+
 [lab]
 debian-ansible
 archlinux-ansible ansible_port=22022
 
 [lab:vars]
 ansible_user=root
-ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 EOF
 
 # remove python warning
 RUN sed --regex -i 's,\[defaults\]$,&\ninterpreter_python=auto_silent,g' /etc/ansible/ansible.cfg
 
+# avoid ssh key verification
+RUN sed --regex -i 's,#host_key_checking = False,host_key_checking = False,g' /etc/ansible/ansible.cfg
+
 # add authentication files
+ADD ./id_rsa.pub /root/.ssh/authorized_keys
 ADD ./authorized_keys /home/ansible/.ssh/
 ADD ./id_rsa* /home/ansible/.ssh/
 RUN chmod 400 /home/ansible/.ssh/* && chown ansible.ansible -R /home/ansible/.ssh/
+
+RUN chmod 400 /root/.ssh/authorized_keys
 
 ENTRYPOINT /entrypoint.sh

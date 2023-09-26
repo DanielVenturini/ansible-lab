@@ -1,0 +1,24 @@
+---
+- name: Old logs clean up
+  hosts: all
+  tasks:
+    - name: find files older than 15 minutes
+      register: old_files
+      find:
+        age: 15m
+        age_stamp: mtime
+        paths: /var/log/
+        recurse: true
+        use_regex: true
+        patterns:
+          - '*.log'
+        file_type: file
+    # - name: output matched files
+    #   with_items: '{{ old_files.files }}'
+    #   debug:
+    #     var: item.path
+    - name: remove old logs
+      loop: '{{ old_files.files }}'
+      file:
+        path: '{{ item.path }}'
+        state: absent
