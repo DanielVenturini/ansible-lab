@@ -1,24 +1,44 @@
 ---
 - name: Old logs clean up
   hosts: all
+  gather_facts: no
+  vars:
+    base_path: /var/log
   tasks:
+    - name: validate params
+      assert:
+        that:
+          - 'base_path is defined'
+          - 'new_log_file is defined'
+
+    - name: debug execution
+      debug:
+        msg: 'It will delete old logs on {{ base_path }} and create a new log on {{ base_path }}/{{ new_log_file }}'
+
     - name: find files older than 15 minutes
       register: old_files
       find:
         age: 15m
         age_stamp: mtime
-        paths: /var/log/
+        paths: '{{ base_path }}'
         recurse: true
         use_regex: true
-        patterns:
-          - '*.log'
+        # patterns:
+        #   - '*.log'
         file_type: file
-    # - name: output matched files
-    #   with_items: '{{ old_files.files }}'
+
+    # - name: debug variables
+    #   loop: '{{ old_files.files }}'
     #   debug:
-    #     var: item.path
+    #     msg: 'File found: {{ item.path }}'
+
     - name: remove old logs
       loop: '{{ old_files.files }}'
       file:
         path: '{{ item.path }}'
         state: absent
+
+    - name: create new log file
+      file:
+        path: '{{ base_path }}/{{ new_log_file }}'
+        state: touch
