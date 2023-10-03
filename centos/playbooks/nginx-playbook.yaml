@@ -2,10 +2,36 @@
   hosts: lab
   # requre privilege escalation
   # become: yes
+  gather_facts: no
   tasks:
+    - name: Pre installation
+      assert:
+        that:
+          - files is not defined
+        fail_msg: Please, verify variables 'files'
+
     - name: Install nginx webserver
       package:
         name: nginx
         state: present
+
+    - name: Verifying if nginx is already running
+      register: nginx_pid
+      stat:
+        path: /var/run/nginx.pid
+
+    # - name: Debug nginx pid result
+    #   debug:
+    #     var: nginx_pid
+
     - name: Start nginx webserver
+      when: nginx_pid.stat.exists == false
+      register: nginx_started
       command: nginx
+
+    # simple prints when nginx was started
+    - name: Debug nginx starting result
+      when: nginx_started.changed
+      debug:
+        msg: nginx wasn't online ... let's start it
+        # var: '{{ nginx_started }}'

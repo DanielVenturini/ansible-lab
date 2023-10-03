@@ -33,6 +33,14 @@ archlinux-ansible ansible_port=22022
 ansible_user=root
 EOF
 
+RUN tee -a /home/ansible/lab-inventory.ini <<EOF
+[lab]
+debian-ansible
+
+[lab:vars]
+ansible_user=root
+EOF
+
 # remove python warning
 RUN sed --regex -i 's,\[defaults\]$,&\ninterpreter_python=auto_silent,g' /etc/ansible/ansible.cfg
 
