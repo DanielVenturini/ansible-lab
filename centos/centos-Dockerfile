@@ -9,7 +9,7 @@ RUN yum install epel-release -y
 RUN yum install ansible nginx -y
 
 # add ssh keys to user ansible
-RUN useradd -m -u 1001 --user-group -G 0 ansible
+RUN useradd -m -u 1002 --user-group -G 0 ansible
 
 # creating entrypoint
 RUN tee /entrypoint.sh <<EOF
@@ -43,6 +43,9 @@ EOF
 
 # remove python warning
 RUN sed --regex -i 's,\[defaults\]$,&\ninterpreter_python=auto_silent,g' /etc/ansible/ansible.cfg
+
+# define roles path
+RUN sed --regex -i 's,#roles_path.*,roles_path = /home/ansible/roles/,g' /etc/ansible/ansible.cfg
 
 # avoid ssh key verification
 RUN sed --regex -i 's,#host_key_checking = False,host_key_checking = False,g' /etc/ansible/ansible.cfg

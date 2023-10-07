@@ -1,0 +1,8 @@
+---
+# vars file for synchronize_paths
+
+paths:
+  - /var/log/sync01/
+  - /var/log/ftp01/
+  - /var/log/scp01/
+  - /var/log/c/

@@ -1,0 +1,25 @@
+---
+# tasks file for synchronize_paths
+- name: Checking path
+  register: paths_results
+  loop: '{{ paths }}'
+  stat:
+    path: '{{ item }}'
+
+# - name: Debugging variable
+#   loop: '{{ paths_results.results }}'
+#   debug:
+#     var: item
+
+- name: Create path and copy READ-FIRST.txt
+  loop: '{{ paths_results.results }}'
+  when: item.stat.exists == false
+  register: altered_paths
+  notify:
+    - Copy READ-FIRST.txt
+  file:
+    path: '{{ item.item }}'
+    state: directory
+
+- name: Flush handlers
+  meta: flush_handlers

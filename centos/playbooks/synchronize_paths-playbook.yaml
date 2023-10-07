@@ -1,0 +1,6 @@
+---
+- hosts: lab
+  become: true
+  gather_facts: no
+  roles:
+    - synchronize_paths

@@ -12,6 +12,7 @@ services:
       - webapps-network
     volumes:
       - ./centos/playbooks/:/home/ansible/playbooks
+      - ./centos/roles/:/home/ansible/roles
       - ./centos/nginx.conf:/etc/nginx/nginx.conf
     command: ["sh","-c","/entrypoint.sh"]
     restart: unless-stopped

@@ -1,0 +1,8 @@
+---
+# handlers file for synchronize_paths
+- name: Copy READ-FIRST.txt
+  loop: '{{altered_paths.results}}'
+  when: 'item.changed == true'
+  copy:
+    src: READ-FIRST.txt
+    dest: '{{ item.item.item }}'

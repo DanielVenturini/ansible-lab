@@ -1,0 +1,3 @@
+# READ-FIRST
+This directory is synchronized among all the virtual machines
+Please, be carefull when making changes here
