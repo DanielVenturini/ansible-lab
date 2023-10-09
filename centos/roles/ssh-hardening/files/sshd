@@ -6,11 +6,12 @@ case "$1" in
     ;;
   stop)
     echo "Stopping SSHD..."
-    killall sshd
+    pkill -f /usr/sbin/sshd
     ;;
   restart)
     echo "Restarting SSHD..."
-    killall sshd && /usr/sbin/sshd
+    pkill -f /usr/sbin/sshd
+    /usr/sbin/sshd
     ;;
   *)
     echo "Usage: $0 {start|stop|restart}"

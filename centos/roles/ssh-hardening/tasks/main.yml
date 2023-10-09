@@ -3,11 +3,12 @@
 
 # once it runs on containers we need to
 # manually create a sshd service file
-- name: install sshd service if not installed
+- name: create ssh service
   copy:
     src: sshd
     dest: /etc/init.d/
     mode: 0554
+  notify: restart sshd
 
 - name: block user password login
   lineinfile:
@@ -21,11 +22,4 @@
     path: /etc/ssh/sshd_config
     regexp: '^#PubkeyAuthentication'
     line: 'PubkeyAuthentication yes'
-  notify: restart sshd
-
-- name: disable root login
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '^#PermitRootLogin'
-    line: 'PermitRootLogin no'
   notify: restart sshd

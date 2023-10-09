@@ -1,8 +1,8 @@
 ---
 # handlers file for ssh-hardening
 - name: restart sshd
-  become: yes
+  async: yes
+  ignore_errors: yes
   service:
     name: sshd
     state: restarted
-    enabled: yes
