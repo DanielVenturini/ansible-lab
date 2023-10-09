@@ -1,0 +1,7 @@
+---
+# deploy_web_app.yml
+- name: Deploy web application
+  hosts: all
+  gather_facts: no
+  roles:
+    - ssh-hardening

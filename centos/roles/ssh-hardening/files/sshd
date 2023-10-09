@@ -1,0 +1,21 @@
+#!/bin/bash
+case "$1" in
+  start)
+    echo "Starting SSHD..."
+    /usr/sbin/sshd
+    ;;
+  stop)
+    echo "Stopping SSHD..."
+    killall sshd
+    ;;
+  restart)
+    echo "Restarting SSHD..."
+    killall sshd && /usr/sbin/sshd
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

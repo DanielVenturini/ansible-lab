@@ -1,0 +1,31 @@
+---
+# tasks file for ssh-hardening
+
+# once it runs on containers we need to
+# manually create a sshd service file
+- name: install sshd service if not installed
+  copy:
+    src: sshd
+    dest: /etc/init.d/
+    mode: 0554
+
+- name: block user password login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: restart sshd
+
+- name: allow public key authentication login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PubkeyAuthentication'
+    line: 'PubkeyAuthentication yes'
+  notify: restart sshd
+
+- name: disable root login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PermitRootLogin'
+    line: 'PermitRootLogin no'
+  notify: restart sshd

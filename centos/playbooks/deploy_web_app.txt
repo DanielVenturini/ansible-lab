@@ -1,0 +1,35 @@
+Scenario:
+You have been tasked with automating the deployment and security configuration of a web application on multiple servers. The web application consists of a frontend (running on Nginx) and a backend (running on Node.js). Additionally, you need to perform the following tasks:
+
+    Security Hardening:
+        Ensure that SSH access to the servers is secure by disabling password-based authentication and enforcing key-based authentication.
+        Configure a firewall to allow only necessary incoming traffic on specific ports (e.g., 22 for SSH, 80 for HTTP, and 443 for HTTPS).
+
+    Web Application Deployment:
+        Clone the web application code repository from a Git repository to the server.
+        Install Node.js and required dependencies.
+        Set up a reverse proxy using Nginx to serve the frontend and proxy requests to the backend application.
+
+    SSL/TLS Configuration:
+        Configure SSL/TLS certificates for Nginx to enable HTTPS for the web application.
+
+Instructions:
+
+    Set up your Ansible control machine and ensure SSH access to the target servers.
+
+    Create an inventory file named inventory.ini that lists the target servers you want to configure.
+
+    Create an Ansible playbook named deploy_web_app.yml to automate the deployment and security configuration tasks. Organize the playbook into roles and tasks for each of the following:
+        SSH hardening and firewall setup.
+        Web application deployment and dependencies.
+        SSL/TLS certificate configuration.
+
+    Write separate tasks for each role to achieve the required configurations and deploy the web application.
+
+    Run your Ansible playbook to configure and deploy the web application on the target servers:
+
+    ansible-playbook -i inventory.ini deploy_web_app.yml
+
+    After the playbook execution, verify that the web application is accessible via HTTPS, and SSH access is secure.
+
+This exercise challenges you to automate a more complex scenario that involves multiple tasks, including security hardening, software installation, and configuration. It also introduces the concept of roles to organize your playbook effectively.
