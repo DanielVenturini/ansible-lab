@@ -11,12 +11,23 @@
   hosts: localhost
   roles:
     - webapp-build
+  vars:
+    dist_local_path: '{{ web_app_dist_local_path }}'
 
 - name: Deploy web application
   gather_facts: no
   hosts: lab
   roles:
     - webapp-deploy
+
+- name: Clean up
+  gather_facts: no
+  hosts: localhost
+  tasks:
+    - name: clean up dist file
+      file:
+        path: '{{ dist_local_path }}'
+        state: absent
 
 # - name: Configure reverse proxy
 #   gather_facts: no

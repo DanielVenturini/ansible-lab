@@ -1,0 +1,32 @@
+---
+# tasks file for webapp-deploy
+- name: install required apps
+  package:
+    name:
+      - nginx
+    state: present
+
+- name: add nginx service file
+  copy:
+    src: nginx
+    dest: /etc/init.d/
+    mode: '554'
+
+- name: copy static html files
+  notify: restart nginx
+  copy:
+    src: '{{ web_app_dist_local_path }}'
+    dest: '{{ web_app_dist_remote_path }}'
+    owner: 33
+    group: 33
+
+- name: Flush handlers
+  meta: flush_handlers
+
+# ensure nginx is started, even when
+# there were not changes on files
+- name: restart nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes

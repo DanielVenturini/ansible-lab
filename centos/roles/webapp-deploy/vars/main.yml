@@ -1,0 +1,8 @@
+---
+# vars file for webapp-deploy
+
+web_app_dist_remote_path: /usr/share/nginx/html/
+
+# the following path must be exactly the same
+# as the one on `webapp-build` role
+web_app_dist_local_path: /build/web-app-dist/
