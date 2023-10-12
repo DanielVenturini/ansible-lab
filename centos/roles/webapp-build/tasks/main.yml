@@ -1,0 +1,31 @@
+---
+# tasks file for webapp-deploy
+- name: install required apps
+  package:
+    name:
+      - git
+      - npm
+    state: present
+
+- name: clone repository
+  git:
+    repo: '{{ web_app_repository }}'
+    dest: '{{ web_app_local_path }}'
+    clone: yes
+
+- name: npm installation
+  npm:
+    path: '{{ web_app_local_path }}'
+    production: no
+    state: present
+
+- name: npm build
+  command:
+    chdir: '{{ web_app_local_path }}'
+    cmd: npm run build
+
+- name: copy dist files
+  copy:
+    remote_src: yes
+    src: '{{ web_app_local_path }}/dist'
+    dest: '{{ web_app_dist_local_path }}'

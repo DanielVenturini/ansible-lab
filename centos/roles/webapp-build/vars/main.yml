@@ -1,0 +1,5 @@
+---
+# vars file for webapp-deploy
+web_app_repository: https://github.com/danielventurini/sample-app-vue
+web_app_local_path: /build/web-app-repo
+web_app_dist_local_path: /build/web-app-dist/

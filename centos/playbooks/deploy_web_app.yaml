@@ -1,7 +1,25 @@
 ---
 # deploy_web_app.yml
-- name: Deploy web application
+- name: Ensure SSH security
   hosts: all
   gather_facts: no
   roles:
     - ssh-hardening
+
+- name: Build web application
+  gather_facts: no
+  hosts: localhost
+  roles:
+    - webapp-build
+
+- name: Deploy web application
+  gather_facts: no
+  hosts: lab
+  roles:
+    - webapp-deploy
+
+# - name: Configure reverse proxy
+#   gather_facts: no
+#   hosts: localhost
+#   roles:
+#     - reverse-proxy
