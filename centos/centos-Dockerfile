@@ -4,18 +4,19 @@ RUN ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
 RUN ssh-keygen -t ecdsa -b 384 -f /etc/ssh/ssh_host_ecdsa_key -N ""
 RUN ssh-keygen -t ed25519 -b 4096 -f /etc/ssh/ssh_host_ed25519_key -N ""
 
-# install ansible and nginx
+# install ansible
 RUN yum install epel-release -y
-RUN yum install ansible nginx -y
+RUN yum install ansible -y
 
 # add ssh keys to user ansible
 RUN useradd -m -u 1002 --user-group -G 0 ansible
+
+RUN su - ansible -c "ansible-galaxy collection install community.crypto"
 
 # creating entrypoint
 RUN tee /entrypoint.sh <<EOF
 #!/bin/sh
 /usr/sbin/sshd
-nginx
 tail -f /dev/null    # the way to keep container running
 EOF
 

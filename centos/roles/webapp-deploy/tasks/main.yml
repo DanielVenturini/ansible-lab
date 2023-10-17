@@ -1,10 +1,27 @@
 ---
 # tasks file for webapp-deploy
 - name: install required apps
-  package:
+  when: inventory_hostname == 'archlinux-ansible'
+  pacman:
+    update_cache: yes
+    name:
+      - nginx=1.24.0
+    state: present
+
+- name: install required apps
+  when: inventory_hostname == 'debian-ansible'
+  apt:
+    update_cache: yes
     name:
       - nginx
     state: present
+
+- name: ensure html path
+  when: inventory_hostname == 'debian-ansible'
+  lineinfile:
+    path: /etc/nginx/sites-available/default
+    regex: 'root '
+    line: root /usr/share/nginx/html
 
 - name: add nginx service file
   copy:
@@ -12,11 +29,15 @@
     dest: /etc/init.d/
     mode: '554'
 
+- name: ensure html path does not exist
+  file:
+    path: '{{ web_app_dist_remote_path }}/html'
+    state: absent
+
 - name: copy static html files
-  notify: restart nginx
   copy:
     src: '{{ web_app_dist_local_path }}'
-    dest: '{{ web_app_dist_remote_path }}'
+    dest: '{{ web_app_dist_remote_path }}/html'
     owner: 33
     group: 33
 
@@ -28,5 +49,5 @@
 - name: restart nginx
   service:
     name: nginx
-    state: started
+    state: restarted
     enabled: yes

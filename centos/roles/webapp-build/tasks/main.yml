@@ -29,3 +29,6 @@
     remote_src: yes
     src: '{{ web_app_local_path }}/dist'
     dest: '{{ web_app_dist_local_path }}'
+
+- name: rename dist files
+  command: 'mv {{ web_app_dist_local_path }}/dist/ {{ web_app_dist_local_path }}/html'
