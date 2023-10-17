@@ -1,0 +1,22 @@
+#!/bin/bash
+case "$1" in
+  start)
+    echo "Starting nginx..."
+    /usr/sbin/nginx
+    ;;
+  stop)
+    echo "Stopping nginx..."
+    pkill -f /usr/sbin/nginx
+    ;;
+  restart)
+    echo "Restarting nginx..."
+    pkill -f /usr/sbin/nginx
+    /usr/sbin/nginx
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

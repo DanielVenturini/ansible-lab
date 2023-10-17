@@ -1,0 +1,3 @@
+---
+# vars file for reverse-proxy
+pki_path: /etc/pki/nginx

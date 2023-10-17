@@ -1,0 +1,37 @@
+---
+# tasks file for reverse-proxy
+- name: install required apps
+  package:
+    name:
+      - nginx
+    state: present
+
+- name: add nginx service file
+  notify: restart nginx
+  copy:
+    src: nginx
+    dest: /etc/init.d/
+    mode: '554'
+
+- name: copy nginx configuration file
+  notify: restart nginx
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/
+
+- name: create pki path
+  file:
+    path: '{{ pki_path }}'
+    state: directory
+
+- name: x509 / generate private key
+  notify: restart nginx
+  openssl_privatekey:
+    path: '{{ pki_path }}/server.key'
+    size: 4096
+
+- name: x509 / generate self-signed certificate
+  community.crypto.x509_certificate:
+    path: '{{ pki_path }}/server.pem'
+    privatekey_path: '{{ pki_path }}/server.key'
+    provider: selfsigned
