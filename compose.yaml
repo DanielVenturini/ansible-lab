@@ -14,6 +14,7 @@ services:
     volumes:
       - ./centos/playbooks/:/home/ansible/playbooks
       - ./centos/roles/:/home/ansible/roles
+      - ./centos/inventory.yaml:/etc/ansible/inventory.yaml
     command: ["sh","-c","/entrypoint.sh"]
     restart: unless-stopped
     deploy:

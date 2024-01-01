@@ -1,0 +1,16 @@
+containers-slaves:
+  vars:
+    ansible_user: root
+  hosts:
+    archlinux-ansible:
+      ansible_port: 22022
+    debian-ansible:
+
+containers-masters:
+  hosts:
+    centos-ansible:
+
+containers:
+  children:
+    containers-slaves:
+    containers-masters:
